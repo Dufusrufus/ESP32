@@ -26,6 +26,7 @@ uint8_t txValue = 0;
 class MyServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
       deviceConnected = true;
+      Serial.println("deviceConnected = true!");
     };
 
     void onDisconnect(BLEServer* pServer) {
@@ -65,6 +66,7 @@ void setup() {
                   );
                       
   pTxCharacteristic->addDescriptor(new BLE2902());
+    
   BLECharacteristic * pRxCharacteristic = pService->createCharacteristic(
                        CHARACTERISTIC_UUID_RX,
                       BLECharacteristic::PROPERTY_WRITE
@@ -84,13 +86,19 @@ void setup() {
 }
 
 void loop() {
-  rxval = pCharacteristic->getValue(BLEUUID CHARACTERISTIC_UUID_RX)
   //if device connected send TX value out
-  if (deviceConnected) {
-        pTxCharacteristic->setValue(&txValue, 1);
-        pTxCharacteristic->notify();
-    delay(10); // bluetooth stack will go into congestion, if too many packets are sent
-  }
+ // if (deviceConnected) {
+   //   pTxCharacteristic->setValue(&txValue, 1);
+     // pTxCharacteristic->notify();
+     // delay(10000); // wait 10 seconds before resetting
+     // pTxCharacteristic->setValue(&txValue, 0);
+     // pTxCharacteristic->notify();
+  //}else{
+      //if not connected lock the system
+    //  pTxCharacteristic->setValue(&txValue, 0);
+    //  pTxCharacteristic->notify();
+    //  delay(10);
+ // }
   delay(1000);
-  Serial.println(txValue);
+
 }
